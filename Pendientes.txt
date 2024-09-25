@@ -1,0 +1,4 @@
+Primera Semana
+Leer Documentacion UX IU (Quiz)
+Leer Fundamentacion 
+Saber HTML y CSS agregado con manejo de Selecciores y maquetacion, ademas de saber usar el flex y grid y sus clases

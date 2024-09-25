@@ -1,0 +1,2 @@
+- Use siempre LiveServe para ejecutar sus proyectos.
+- Si no tiene activado el formateo de código al guardar, dé formato a su código antes de subirlo al repositorio

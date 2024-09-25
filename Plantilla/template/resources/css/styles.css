@@ -1,0 +1,11 @@
+:root {
+  --bg-color: rgb(226, 243, 250);
+  --text-color: rgb(3, 80, 80);
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-size: 24px;
+  font-family: 'Arial', sans-serif;
+}

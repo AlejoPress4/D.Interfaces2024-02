@@ -1,0 +1,23 @@
+/* El asterisco es el selector universal, es decir, se aplica esas propiedades a toda la pagina */
+*{
+    margin: 1;
+    padding: 0;
+    box-sizing: border-box;
+}
+h1{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color :green;   
+}
+/* Selector por id, el cual es unico, tambien se puede desglosar para lo que necesitemos ya que esta en un secction*/
+#home{ 
+    background-color: #f9f9f9;
+    padding: 1rem;
+}
+#home h2{
+    color: blue;
+}
+/* Selector por clase, se puede aplicar a varios elementos */
+.parrafo{
+    color: rgb(123, 0, 255);
+}

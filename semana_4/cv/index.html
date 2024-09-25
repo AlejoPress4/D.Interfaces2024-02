@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alejo's Cv</title>
+    <link rel="stylesheet" href="./resources/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./resources/img/icon.png" alt="">
+            <h1>Alejandro Preciado</h1>
+            <p>{code}</p>
+        </div>
+        <nav>
+            <!-- <button class="nav-toggle" aria-label="Abrir menú">
+                <span class="icon"></span>
+                <span class="icon"></span>
+                <span class="icon"></span>
+            </button> -->
+            <ul>
+                <li><a href="#profile" class="active">Perfil</a></li>
+                <li><a href="#experience">Experiencia</a></li>
+                <li><a href="#skills">Habilidades</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="profile_main" aria-labelledby="perfil-heading">
+            <h2 id="perfile-heading">Hola, soy Alejandro Preciado</h2>
+            <p>Soy desarrollador junior en frontend con un fuerte estudio en <strong>la universidad de Caldas</strong> enfocado y desarrollado en distintos campos de programación y tecnologías.</p>
+            <a href="#" class="button">Descarga mi cv</a>
+            <figure class="profile-image">
+                <img src="./resources/img/fotocv.jpg" alt="">
+                <figcaption>Imagen de mi</figcaption>
+            </figure>
+        </section>
+        
+        <section id="capacities" aria-labelledby="capacities-heading">
+            <h2 id="capacities-heading">Habilidades</h2>
+            <div class="skills">
+                <span>CSS</span>
+                <span>HTML</span>
+                <span>Node.js</span>
+                <span>React.js</span>
+                <span>TypeScript</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- <script>
+        document.querySelector('.nav-toggle').addEventListener('click', () => {
+        document.querySelector('.nav-list').classList.toggle('nav-list-visible');
+        });
+    </script> -->
+</body>
+</html>
