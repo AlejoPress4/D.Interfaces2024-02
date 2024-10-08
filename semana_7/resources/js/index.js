@@ -56,13 +56,13 @@ class App {
 
     // Función pura para manejar el evento de clic
     const manejarClickDepartamento = (event, filtrarCiudades) => {
-      const targetElement = event.target;
-      
+      const targetElement = event.target
+
       if (targetElement.hasAttribute('data-departamento')) {
-        const depto = targetElement.getAttribute('data-departamento');
-        console.log(filtrarCiudades(depto));
+        const depto = targetElement.getAttribute('data-departamento')
+        console.log(filtrarCiudades(depto))
       } else {
-        console.log('No se ha seleccionado un departamento');
+        console.log('No se ha seleccionado un departamento')
       }
     }
 
