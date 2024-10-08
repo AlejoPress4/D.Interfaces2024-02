@@ -15,7 +15,7 @@ class App {
     listOptions.forEach(item => item.addEventListener('click', App.#mainMenu))
   }
 
-  static #mainMenu(e) {
+  static #mainMenu = async e => {
     let option = 'Ninguna'
     if (e != undefined) {
       e.preventDefault()
@@ -31,10 +31,18 @@ class App {
           console.log('tercera opción')
           break
         case 'Contact':
-          App.#loadPage('./resources/html/contacto.html', 'main')
+            await App.#loadPage('./resources/html/contacto.html', 'main')
+            const deptos = document.querySelector('#deptos')
+            let options = ''
+            App.#deptos.data.forEach(depto => {
+              options += <option value="${depto.id}">${depto.name}</option>
+            })
+            deptos.innerHTML = options
+  
+            deptos.addEventListener('change', e => {
+              console.log('departamento ' + e.target.value)
+            })
           break
-        default:
-          console.log('Opción no reconocida')
       }
     }
   }

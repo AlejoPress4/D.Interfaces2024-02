@@ -1,6 +1,40 @@
 <html>
-    <br></br>
-    <br></br>
-    <br></br>
-    <h2>Contacto</h2>
+    <link rel="stylesheet" href="./resources/css/stylesC.css" />
+    <script defer type="module" src="./resources/js/index.js"></script>
+    <body>
+        <br />
+        <br />
+        <br />
+        <body>
+            <div class="container">
+                <h1>Contacto</h1>
+                <form id="contactForm">
+                    <div>
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre"  required>
+                    </div>
+                    <div>
+                        <label for="deptos">Departamento:</label>
+                        <select id="deptos" name="departamento" required>
+                            <option value="">Seleccione un departamento</option>
+                            <!-- Las opciones de departamentos se cargarán dinámicamente aquí -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="localidades">Localidad:</label>
+                        <select id="localidades" name="localidad" required>
+                            <option value="">Seleccione una localidad</option>
+                            <!-- Las opciones de localidades se cargarán dinámicamente aquí -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="mensaje">Mensaje:</label>
+                        <textarea id="mensaje" name="mensaje" required></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit">Enviar</button>
+                        <button type="button" onclick="cancelForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
 </html>
