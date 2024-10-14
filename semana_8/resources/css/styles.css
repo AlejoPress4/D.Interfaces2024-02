@@ -498,41 +498,202 @@ footer {
   }
 }
 
-/* Medium devices (tablets, 768px to 992px) */
-@media (min-width: 48em) and (max-width: 62em) {
+@media (max-width: 48em) {
+  /* Header */
+  .header {
+    flex-direction: column;
+    padding: 1rem 3%;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+  }
+
+  #logo img {
+    height: 50px;
+  }
+
+  .menu {
+    margin-top: 1rem;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .menu li {
+    margin-left: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Main content */
+  #main-content {
+    padding: 1rem 3%;
+  }
+
   /* Masonry Grid */
+  .masonry-grid {
+    display: block;
+    margin-left: 0;
+  }
+
   .masonry-grid-item {
-    width: calc(50% - 30px);
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 20px;
+  }
+
+  /* Product card adjustments */
+  .product-card {
+    display: flex;
+    align-items: center;
+  }
+
+  .product-card img {
+    width: 40%;
+    margin-right: 15px;
+  }
+
+  .product-info {
+    flex: 1;
+  }
+
+  /* Product Catalog (inicio.html) */
+  .masonry-grid {
+    display: block;
+    margin-left: 0;
+  }
+
+  .masonry-grid-item {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 20px;
+    box-shadow: none;
+    background-color: var(--color-background);
+  }
+
+  .product-card {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-primary);
+    padding-bottom: 15px;
+  }
+
+  .product-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+
+  .product-info {
+    flex: 1;
+  }
+
+  .product-name {
+    font-family: var(--font-heading);
+    color: var(--color-secondary);
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+
+  .product-price {
+    font-weight: bold;
+    color: var(--color-accent);
+  }
+
+  .add-to-cart {
+    background-color: var(--color-secondary);
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Shopping Cart (comprar.html) */
+  .cart-container {
+    padding: 1rem;
+    box-shadow: none;
+    background-color: var(--color-background);
+  }
+
+  .cart-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-primary);
+  }
+
+  .cart-item-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+
+  .cart-item-details {
+    flex-grow: 1;
+  }
+
+  .cart-item-details h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .remove-item {
+    background-color: transparent;
+    border: none;
+    color: var(--color-accent);
+    cursor: pointer;
+  }
+
+  .cart-summary {
+    background-color: var(--color-primary);
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+  }
+
+  .checkout-button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
   }
 
   /* About Page */
   .about-content {
-    gap: 1rem;
-  }
-}
-
-@media (min-width: 62em) {
-  /* You can add specific styles for larger screens here if needed */
-}
-
-/* Adjust font sizes for better readability on smaller screens */
-@media (max-width: 48em) {
-  body {
-    font-size: 14px;
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
-  .product-name {
-    font-size: 1rem;
+  .about-hero {
+    padding: 30px 0;
   }
 
-  .about-hero h1,
-  .contact-title {
+  .about-hero h1 {
     font-size: 2rem;
   }
 
-  .about-section h2,
-  .contact-form-container h2,
-  .contact-info h2 {
-    font-size: 1.2rem;
+  .team-members {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .team-member {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
   }
 }
