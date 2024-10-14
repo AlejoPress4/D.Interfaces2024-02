@@ -1,40 +1,56 @@
 <html>
-    <link rel="stylesheet" href="./resources/css/stylesC.css" />
-    <script defer type="module" src="./resources/js/index.js"></script>
-    <body>
-        <br />
-        <br />
-        <br />
-        <body>
-            <div class="container">
-                <h1>Contacto</h1>
-                <form id="contactForm">
-                    <div>
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre"  required>
-                    </div>
-                    <div>
-                        <label for="deptos">Departamento:</label>
-                        <select id="deptos" name="departamento" required>
-                            <option value="">Seleccione un departamento</option>
-                            <!-- Las opciones de departamentos se cargarán dinámicamente aquí -->
-                        </select>
-                    </div>
-                    <div>
-                        <label for="localidades">Localidad:</label>
-                        <select id="localidades" name="localidad" required>
-                            <option value="">Seleccione una localidad</option>
-                            <!-- Las opciones de localidades se cargarán dinámicamente aquí -->
-                        </select>
-                    </div>
-                    <div>
-                        <label for="mensaje">Mensaje:</label>
-                        <textarea id="mensaje" name="mensaje" required></textarea>
-                    </div>
-                    <div class="button-group">
-                        <button type="submit">Enviar</button>
-                        <button type="button" onclick="cancelForm()">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+<div class="contact-container">
+    <h1 class="contact-title">Contáctanos</h1>
+    <p class="contact-subtitle">Estamos encantados de atender tus consultas y pedidos especiales</p>
+    
+    <div class="contact-content">
+      <div class="contact-form-container">
+        <h2>Envíanos un mensaje</h2>
+        <form class="contact-form">
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="subject">Asunto</label>
+            <input type="text" id="subject" name="subject" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="submit-button">Enviar mensaje</button>
+        </form>
+      </div>
+      
+      <div class="contact-info">
+        <h2>Información de contacto</h2>
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <p>123 Rue de la Pâtisserie, 75001 París, Francia</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-phone"></i>
+          <p>+33 1 23 45 67 89</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-envelope"></i>
+          <p>info@lepechedegourmandise.com</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-clock"></i>
+          <p>Lunes a Sábado: 7:00 AM - 8:00 PM<br>Domingo: 8:00 AM - 6:00 PM</p>
+        </div>
+        <div class="social-media">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
 </html>
