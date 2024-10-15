@@ -1,0 +1,165 @@
+### Tenga en cuenta que debe asignar el puerto correcto de salida
+
+@url = http://localhost:7070
+
+### listar los estados de los envíos
+GET {{url}}/envio/estados
+
+// ---------------------- CRUD DE CLIENTES ----------------------
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0001",
+    "nombre": "Carlos Cuesta Iglesias",
+    "direccion": "Edificio del parque, piso 2, Ucaldas",
+    "telefono": "3115551234",
+    "ciudad": "Manizales"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0002",
+    "nombre": "Ana María López Pérez",
+    "direccion": "Calle 50 #12B-35, Barrio La Francia",
+    "telefono": "3126789012",
+    "ciudad": "Pereira"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0003",
+    "nombre": "Juan David Ramírez Castro",
+    "direccion": "Carrera 13 #25-45, Edificio Galaxia, apto 302",
+    "telefono": "3004567890",
+    "ciudad": "Medellín"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0004",
+    "nombre": "Sofia González Villa",
+    "direccion": "Vereda La Palma, Finca El Paraíso",
+    "telefono": "3151234567",
+    "ciudad": "Armenia"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0005",
+    "nombre": "Diego Hernández Moreno",
+    "direccion": "Avenida Bolívar #15-89, Centro Comercial El Dorado",
+    "telefono": "3219876543",
+    "ciudad": "Bogotá"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0006",
+    "nombre": "Laura Patiño Salazar",
+    "direccion": "Urbanización Los Rosales, Manzana 3, Casa 12",
+    "telefono": "3187654321",
+    "ciudad": "Cali"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Bogotá",
+    "direccion": "Calle 100 # 15B - 32",
+    "id": "C0007",
+    "telefono": "3112345678",
+    "nombre": "Carlos Alberto Pérez"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Medellín",
+    "direccion": "Avenida El Poblado",
+    "id": "C0008",
+    "telefono": "3059876543",
+    "nombre": "María Fernanda Gómez"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Cali",
+    "direccion": "Urbanización Ciudad Jardín",
+    "id": "C0009",
+    "telefono": "3124567890",
+    "nombre": "Juan Sebastián Herrera"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Barranquilla",
+    "direccion": "Carrera 51",
+    "id": "C0010",
+    "telefono": "3191234567",
+    "nombre": "Laura Valentina Ramírez"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Pereira",
+    "direccion": "Avenida 30 de Agosto",
+    "id": "C0011",
+    "telefono": "3139876543",
+    "nombre": "Daniel Felipe González"
+}
+
+### listar todos los cliente registrados
+GET {{url}}/cliente
+
+### Buscar un cliente dado su índice
+GET {{url}}/cliente/1
+
+### Buscar un cliente dado su ID
+GET {{url}}/cliente/0A7FQ
+
+### Buscar por ID y actualizar algunos o todos los datos de un cliente
+PATCH {{url}}/cliente/0A7FQ
+Content-Type: application/json; charset=utf-8
+
+{
+  "nombre": "David Bohm",
+  "direccion": "Laboratorio de física cuántica, LFCB",
+  "telefono": "3115551010",
+  "ciudad": "Bogotá"
+}
+
+### Eliminar un cliente dado su ID
+DELETE {{url}}/cliente/0A7FQ
+
+
