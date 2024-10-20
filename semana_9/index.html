@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./resources/css/styles.css">
-    <script defer type = "module" src = "./resources/js/index.js"></script>
-</head>
-<body>
+
+<!-- 
+  Demostración de menú responsive basado en
+  https://codepen.io/mutedblues/pen/MmPNPG 
+-->
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Rest</title>
+    <link rel="stylesheet" href="./resources/css/styles.css" />
+    <script defer type="module" src="./resources/js/index.js"></script>
+  </head>
+
+  <body>
     <header class="header">
-        <a href="#" id="logo">
-            <img src="./resources/img/logo.jpeg" alt="" />
-          </a>
-    <ul class="menu">
-        <li><a href="#showclients">Ver Clientes</a></li>
-        <li><a href="#edit">Editar</a></li>
-        <li><a href="#agg">Agregar</a></li>
+      <a id="logo" href="" class="logo">API Rest</a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul id="main-menu" class="menu">
+        <li><a href="">Listado de clientes</a></li>
+        <li><a href="">Nuevo cliente</a></li>
+        <li><a href="">Buscar|Actualizar</a></li>
+        <li><a href="">Eliminar</a></li>
       </ul>
     </header>
-    <main id="main-content"></main>
-</body>
+    <main></main>
+  </body>
 </html>

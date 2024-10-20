@@ -139,14 +139,25 @@ Content-Type: application/json; charset=utf-8
     "nombre": "Daniel Felipe González"
 }
 
+### agregar un cliente con ID desconocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "nombre": "David Andrés García",
+    "direccion": "Mercaldas La Sultana",
+    "telefono": "3115550002",
+    "ciudad": "Manizales"
+}
+
 ### listar todos los cliente registrados
 GET {{url}}/cliente
 
 ### Buscar un cliente dado su índice
-GET {{url}}/cliente/1
+GET {{url}}/cliente/indice/1
 
 ### Buscar un cliente dado su ID
-GET {{url}}/cliente/0A7FQ
+GET {{url}}/cliente/id/C0001
 
 ### Buscar por ID y actualizar algunos o todos los datos de un cliente
 PATCH {{url}}/cliente/0A7FQ
