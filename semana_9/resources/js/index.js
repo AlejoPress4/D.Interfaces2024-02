@@ -76,34 +76,50 @@ class App {
   static #createCustomers() {
     document.querySelector('#add-customer').addEventListener('click', async e => {
       e.preventDefault()
-
-      if (!Helpers.okForm('#new-customer')) {
+  
+      const customerData = App.#getBody()
+      let isValid = true
+      let errorMessage = ''
+  
+      if (!Helpers.validateId(customerData.id)) {
+        isValid = false
+        errorMessage += 'ID inválido. Debe tener entre 5 y 15 caracteres.\n'
+      }
+      if (!Helpers.validateName(customerData.nombre)) {
+        isValid = false
+        errorMessage += 'Nombre inválido. Debe tener entre 1 y 50 caracteres.\n'
+      }
+      if (!Helpers.validateAddress(customerData.direccion)) {
+        isValid = false
+        errorMessage += 'Dirección inválida. Debe tener al menos 10 caracteres.\n'
+      }
+      if (!Helpers.validatePhone(customerData.telefono)) {
+        isValid = false
+        errorMessage += 'Teléfono inválido. Debe ser un número válido de Colombia.\n'
+      }
+      if (!Helpers.validateCity(customerData.ciudad)) {
+        isValid = false
+        errorMessage += 'Ciudad inválida. Debe tener entre 4 y 50 caracteres.\n'
+      }
+  
+      if (!isValid) {
+        Helpers.showMessage(document.querySelector('#create-customers'), errorMessage, false)
         return
       }
-
+  
       const response = await Helpers.fetchData(`${App.#urlAPI}/cliente`, {
         method: 'POST',
-        body: App.#getBody(),
+        body: customerData,
       })
-
-      const messageElement = document.createElement('div')
-      messageElement.classList.add('message')
-
+  
       if (response.message === 'ok') {
         console.info('Cliente agregado', response.data)
-        messageElement.textContent = 'Cliente agregado exitosamente'
-        messageElement.classList.add('success')
+        Helpers.showMessage(document.querySelector('#create-customers'), 'Cliente agregado exitosamente', true)
         document.querySelector('#new-customer').reset()
       } else {
         console.warn('No se pudo agregar el registro', response)
-        messageElement.textContent = 'Error al agregar el cliente'
-        messageElement.classList.add('error')
+        Helpers.showMessage(document.querySelector('#create-customers'), 'Error al agregar el cliente: ' + response.message, false)
       }
-
-      document.querySelector('#create-customers').appendChild(messageElement)
-      setTimeout(() => {
-        messageElement.remove()
-      }, 5000)
     })
   }
 
@@ -146,30 +162,53 @@ class App {
   static updateCustomer() {
     document.querySelector('#update').addEventListener('click', async e => {
       e.preventDefault()
-
+      
       const customerData = App.#getBody()
-
-      if (!Helpers.validateCustomerForm(customerData)) {
-        console.warn('Datos del cliente inválidos')
+      let isValid = true
+      let errorMessage = ''
+  
+      if (!Helpers.validateId(customerData.id)) {
+        isValid = false
+        errorMessage += 'ID inválido. Debe tener entre 5 y 15 caracteres.\n'
+      }
+      if (!Helpers.validateName(customerData.nombre)) {
+        isValid = false
+        errorMessage += 'Nombre inválido. Debe tener entre 1 y 50 caracteres.\n'
+      }
+      if (!Helpers.validateAddress(customerData.direccion)) {
+        isValid = false
+        errorMessage += 'Dirección inválida. Debe tener al menos 10 caracteres.\n'
+      }
+      if (!Helpers.validatePhone(customerData.telefono)) {
+        isValid = false
+        errorMessage += 'Teléfono inválido. Debe ser un número válido de Colombia.\n'
+      }
+      if (!Helpers.validateCity(customerData.ciudad)) {
+        isValid = false
+        errorMessage += 'Ciudad inválida. Debe tener entre 4 y 50 caracteres.\n'
+      }
+  
+      if (!isValid) {
+        Helpers.showMessage(document.querySelector('#update-customers'), errorMessage, false)
         return
       }
-
+  
       try {
         const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/${customerData.id}`, {
           method: 'PATCH',
           body: customerData,
         })
-
+  
         if (response.message === 'ok') {
           console.info('Cliente actualizado exitosamente', response.data)
-          Helpers.showMessage(document.querySelector('#update-client'), 'Cliente actualizado exitosamente', true)
+          Helpers.showMessage(document.querySelector('#update-customers'), 'Cliente actualizado exitosamente', true)
         } else {
           console.warn('No se pudo actualizar el cliente', response)
-          Helpers.showMessage(document.querySelector('#update-client'), 'Error al actualizar el cliente: ' + response.message, false)
+          Helpers.showMessage(document.querySelector('#update-customers'), 'Error al actualizar el cliente: ' + response.message, false)
         }
       } catch (error) {
         console.error('Error al actualizar el cliente:', error)
-        Helpers.showMessage(document.querySelector('#update-client'), 'Error al actualizar el cliente. Intente nuevamente.', false)
+        Helpers.showMessage(document.querySelector('#update-customers'), 'Error al actualizar el cliente. Intente nuevamente.', false)
       }
     })
   }
