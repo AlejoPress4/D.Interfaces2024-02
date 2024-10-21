@@ -108,39 +108,68 @@ class App {
   }
 
   static #searchCustomers() {
-    // cuando se pulse el botón "Buscar"...
     document.querySelector('#search-customer').addEventListener('click', async e => {
       e.preventDefault()
-      // Buscar el ID dado...
       const id = document.querySelector('#id').value
-      const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/id/${id}`)
-
-      // si se encuentra el registro, mostrar los datos
-      if ((response.message = 'ok')) {
-        document.querySelector('#id').value = response.id || ''
-        document.querySelector('#nombre').value = response.nombre || ''
-        document.querySelector('#direccion').value = response.direccion || ''
-        document.querySelector('#telefono').value = response.telefono || ''
-        document.querySelector('#ciudad').value = response.ciudad || ''
+  
+      if (!Helpers.validateId(id)) {
+        console.warn('ID inválido')
+        Helpers.showMessage(document.querySelector('#update-client'), 'ID inválido. Debe tener entre 5 y 15 caracteres.', false)
+        return
+      }
+  
+      try {
+        const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/id/${id}`)
+  
+        if (response.message === 'ok' && response.data) {
+          const customer = response.data
+          document.querySelector('#nombre').value = customer.nombre || ''
+          document.querySelector('#direccion').value = customer.direccion || ''
+          document.querySelector('#telefono').value = customer.telefono || ''
+          document.querySelector('#ciudad').value = customer.ciudad || ''
+          console.info('Cliente encontrado', customer)
+          Helpers.showMessage(document.querySelector('#update-client'), 'Cliente encontrado. Datos cargados.', true)
+        } else {
+          console.warn('No se encontró el cliente', response)
+          document.querySelector('#update-client').reset()
+          Helpers.showMessage(document.querySelector('#update-client'), 'No se encontró el cliente con el ID proporcionado.', false)
+        }
+      } catch (error) {
+        console.error('Error al buscar el cliente:', error)
+        Helpers.showMessage(document.querySelector('#update-client'), 'Error al buscar el cliente. Intente nuevamente.', false)
       }
     })
-
+  
     App.updateCustomer()
   }
 
   static updateCustomer() {
     document.querySelector('#update').addEventListener('click', async e => {
       e.preventDefault()
-      const id = document.querySelector('#id').value
-      const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/${id}`, {
-        method: 'PATCH',
-        body: App.#getBody(),
-      })
 
-      if (response.message == 'ok') {
-        console.info('Registro actualizado', response.data)
-      } else {
-        console.warn(response)
+      const customerData = App.#getBody()
+
+      if (!Helpers.validateCustomerForm(customerData)) {
+        console.warn('Datos del cliente inválidos')
+        return
+      }
+
+      try {
+        const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/${customerData.id}`, {
+          method: 'PATCH',
+          body: customerData,
+        })
+
+        if (response.message === 'ok') {
+          console.info('Cliente actualizado exitosamente', response.data)
+          Helpers.showMessage(document.querySelector('#update-client'), 'Cliente actualizado exitosamente', true)
+        } else {
+          console.warn('No se pudo actualizar el cliente', response)
+          Helpers.showMessage(document.querySelector('#update-client'), 'Error al actualizar el cliente: ' + response.message, false)
+        }
+      } catch (error) {
+        console.error('Error al actualizar el cliente:', error)
+        Helpers.showMessage(document.querySelector('#update-client'), 'Error al actualizar el cliente. Intente nuevamente.', false)
       }
     })
   }
@@ -156,28 +185,35 @@ class App {
   }
 
   static #deleteCustomers() {
-    document.querySelector('#delete-customer').addEventListener('click', async e => {
+    const form = document.querySelector('#new-customer')
+    const deleteButton = document.querySelector('#delete-customer')
+
+    deleteButton.addEventListener('click', async e => {
       e.preventDefault()
       const id = document.querySelector('#id').value
-      const form = document.querySelector('#new-customer')
-  
+
       if (!Helpers.validateId(id)) {
         Helpers.showMessage(form, 'ID inválido. Debe tener entre 5 y 15 caracteres.', false)
         return
       }
-  
+
       try {
+        const confirmDelete = confirm('¿Está seguro de que desea eliminar este cliente? Esta acción no se puede deshacer.')
+        if (!confirmDelete) {
+          return
+        }
+
         const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/${id}`, {
           method: 'DELETE',
         })
-  
+
         if (response.message === 'ok') {
           console.info('Cliente eliminado', response.data)
           Helpers.showMessage(form, 'Cliente eliminado exitosamente', true)
           document.querySelector('#id').value = ''
         } else {
           console.warn('No se pudo eliminar el cliente', response)
-          Helpers.showMessage(form, 'Error al eliminar el cliente', false)
+          Helpers.showMessage(form, 'Error al eliminar el cliente: ' + response.message, false)
         }
       } catch (error) {
         console.error('Error al eliminar el cliente:', error)
