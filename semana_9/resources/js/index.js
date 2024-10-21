@@ -120,7 +120,7 @@ class App {
   
       try {
         const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/id/${id}`)
-  
+
         if (response.message === 'ok' && response.data) {
           const customer = response.data
           document.querySelector('#nombre').value = customer.nombre || ''
