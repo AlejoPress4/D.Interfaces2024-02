@@ -58,6 +58,10 @@ export default class Helpers {
     }
   }
 
+  
+
+
+
   /**
    * Crea el HTML correspondiente a una lista de opciones para inyectar en un select
    * @param {Object} El objeto de definición de la lista

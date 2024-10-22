@@ -32,6 +32,10 @@ class App {
         await Helpers.loadPage('./resources/html/delete-customer.html', 'main')
         App.#deleteCustomers()
         break
+      case 'Agregar Mercancia':
+        await Helpers.loadPage('./resources/html/add-merchandise.html', 'main')
+        App.#addMerchandise()
+        break
       default:
         console.warn(`Problemas con la opción "${option}"`)
     }
@@ -76,11 +80,11 @@ class App {
   static #createCustomers() {
     document.querySelector('#add-customer').addEventListener('click', async e => {
       e.preventDefault()
-  
+
       const customerData = App.#getBody()
       let isValid = true
       let errorMessage = ''
-  
+
       if (!Helpers.validateId(customerData.id)) {
         isValid = false
         errorMessage += 'ID inválido. Debe tener entre 5 y 15 caracteres.\n'
@@ -101,17 +105,17 @@ class App {
         isValid = false
         errorMessage += 'Ciudad inválida. Debe tener entre 4 y 50 caracteres.\n'
       }
-  
+
       if (!isValid) {
         Helpers.showMessage(document.querySelector('#create-customers'), errorMessage, false)
         return
       }
-  
+
       const response = await Helpers.fetchData(`${App.#urlAPI}/cliente`, {
         method: 'POST',
         body: customerData,
       })
-  
+
       if (response.message === 'ok') {
         console.info('Cliente agregado', response.data)
         Helpers.showMessage(document.querySelector('#create-customers'), 'Cliente agregado exitosamente', true)
@@ -127,13 +131,13 @@ class App {
     document.querySelector('#search-customer').addEventListener('click', async e => {
       e.preventDefault()
       const id = document.querySelector('#id').value
-  
+
       if (!Helpers.validateId(id)) {
         console.warn('ID inválido')
         Helpers.showMessage(document.querySelector('#update-client'), 'ID inválido. Debe tener entre 5 y 15 caracteres.', false)
         return
       }
-  
+
       try {
         const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/id/${id}`)
 
@@ -155,18 +159,18 @@ class App {
         Helpers.showMessage(document.querySelector('#update-client'), 'Error al buscar el cliente. Intente nuevamente.', false)
       }
     })
-  
+
     App.updateCustomer()
   }
 
   static updateCustomer() {
     document.querySelector('#update').addEventListener('click', async e => {
       e.preventDefault()
-      
+
       const customerData = App.#getBody()
       let isValid = true
       let errorMessage = ''
-  
+
       if (!Helpers.validateId(customerData.id)) {
         isValid = false
         errorMessage += 'ID inválido. Debe tener entre 5 y 15 caracteres.\n'
@@ -187,18 +191,18 @@ class App {
         isValid = false
         errorMessage += 'Ciudad inválida. Debe tener entre 4 y 50 caracteres.\n'
       }
-  
+
       if (!isValid) {
         Helpers.showMessage(document.querySelector('#update-customers'), errorMessage, false)
         return
       }
-  
+
       try {
         const response = await Helpers.fetchData(`${App.#urlAPI}/cliente/${customerData.id}`, {
           method: 'PATCH',
           body: customerData,
         })
-  
+
         if (response.message === 'ok') {
           console.info('Cliente actualizado exitosamente', response.data)
           Helpers.showMessage(document.querySelector('#update-customers'), 'Cliente actualizado exitosamente', true)
@@ -260,6 +264,116 @@ class App {
       }
     })
   }
+
+  static #addMerchandise() {
+    App.#loadClients();
+    document.querySelector('#add-merchandise').addEventListener('click', App.#handleAddMerchandise);
+  }
+
+  static async #loadClients() {
+    try {
+      const response = await Helpers.fetchData(`${App.#urlAPI}/cliente`);
+      if (response.message === 'ok') {
+        const clientSelect = document.querySelector('#cliente');
+        const options = Helpers.toOptionList({
+          items: response.data,
+          value: 'id',
+          text: 'nombre',
+          firstOption: 'Seleccione un cliente'
+        });
+        clientSelect.innerHTML = options;
+      }
+    } catch (error) {
+      console.error('Error loading clients:', error);
+    }
+  }
+
+  static async #handleAddMerchandise(e) {
+    e.preventDefault();
+
+    const merchandiseData = App.#getMerchandiseData();
+    let isValid = true;
+    let errorMessage = '';
+
+    if (!App.#validateMerchandise(merchandiseData, isValid, errorMessage)) {
+      Helpers.showMessage(document.querySelector('#add-merchandise-form'), errorMessage, false);
+      return;
+    }
+
+    try {
+      const response = await Helpers.fetchData(`${App.#urlAPI}/mercancia`, {
+        method: 'POST',
+        body: merchandiseData,
+      });
+
+      if (response.message === 'ok') {
+        console.info('Mercancía agregada', response.data);
+        Helpers.showMessage(document.querySelector('#add-merchandise-form'), 'Mercancía agregada exitosamente', true);
+        document.querySelector('#add-merchandise-form').reset();
+      } else {
+        console.warn('No se pudo agregar la mercancía', response);
+        Helpers.showMessage(document.querySelector('#add-merchandise-form'), 'Error al agregar la mercancía: ' + response.message, false);
+      }
+    } catch (error) {
+      console.error('Error al agregar la mercancía:', error);
+      Helpers.showMessage(document.querySelector('#add-merchandise-form'), 'Error al agregar la mercancía. Intente nuevamente.', false);
+    }
+  }
+
+  static #getMerchandiseData() {
+    return {
+      contenido: document.querySelector('#contenido').value,
+      ancho: parseFloat(document.querySelector('#ancho').value),
+      alto: parseFloat(document.querySelector('#alto').value),
+      largo: parseFloat(document.querySelector('#largo').value),
+      fechaHoraIngreso: document.querySelector('#fechaHoraIngreso').value,
+      fechaHoraSalida: document.querySelector('#fechaHoraSalida').value,
+      bodega: document.querySelector('#bodega').value,
+      cliente: document.querySelector('#cliente').value,
+    };
+  }
+
+  static #validateMerchandise(data, isValid, errorMessage) {
+    if (!data.contenido || data.contenido.length > 100) {
+      isValid = false;
+      errorMessage += 'El contenido debe tener entre 1 y 100 caracteres.\n';
+    }
+    if (!data.ancho || isNaN(data.ancho) || data.ancho <= 0) {
+      isValid = false;
+      errorMessage += 'El ancho debe ser un número positivo.\n';
+    }
+    if (!data.alto || isNaN(data.alto) || data.alto <= 0) {
+      isValid = false;
+      errorMessage += 'El alto debe ser un número positivo.\n';
+    }
+    if (!data.largo || isNaN(data.largo) || data.largo <= 0) {
+      isValid = false;
+      errorMessage += 'El largo debe ser un número positivo.\n';
+    }
+    if (!data.fechaHoraIngreso || !App.#isValidDate(data.fechaHoraIngreso)) {
+      isValid = false;
+      errorMessage += 'La fecha y hora de ingreso no es válida.\n';
+    }
+    if (!data.fechaHoraSalida || !App.#isValidDate(data.fechaHoraSalida)) {
+      isValid = false;
+      errorMessage += 'La fecha y hora de salida no es válida.\n';
+    }
+    if (!data.bodega || data.bodega.length > 50) {
+      isValid = false;
+      errorMessage += 'La bodega debe tener entre 1 y 50 caracteres.\n';
+    }
+    if (!data.cliente) {
+      isValid = false;
+      errorMessage += 'Debe seleccionar un cliente.\n';
+    }
+    return isValid;
+  }
+
+  static  #isValidDate(dateString) {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+  }
 }
+
 
 App.main()
