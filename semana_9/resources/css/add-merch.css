@@ -1,0 +1,150 @@
+/* Paleta de colores */
+:root {
+  --primary-color: oklch(55% 0.2 260);
+  --primary-hover: oklch(50% 0.25 260);
+  --text-color: lch(30% 40 260);
+  --border-color: oklch(80% 0.05 260);
+  --focus-color: oklch(65% 0.2 260);
+  --focus-shadow: oklch(90% 0.05 260);
+  --background-color: oklch(98% 0.02 260);
+}
+
+/* Contenedor principal */
+.container {
+  width: 100%;
+  max-width: 615px;
+  margin: 1rem auto;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 0.25rem 0.375rem oklch(0% 0 0 / 10%);
+  padding: 1.5rem;
+}
+
+/* Título */
+h1 {
+  color: lch(40% 60 260);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* Formulario */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Grupo de campos del formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fila del formulario para diseños responsivos */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Etiquetas */
+label {
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* Campos de entrada */
+input,
+textarea,
+select {
+  /* width: 100%; */
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 0.125rem var(--focus-shadow);
+}
+
+/* Campo de texto */
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Botón */
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Mensajes de estado */
+.message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.success {
+  background-color: oklch(90% 0.1 140);
+  color: oklch(30% 0.2 140);
+}
+
+.error {
+  background-color: oklch(90% 0.1 30);
+  color: oklch(30% 0.2 30);
+}
+
+/* Estilos responsivos */
+@media (min-width: 48em) {
+  .form-row {
+    flex-direction: row;
+  }
+
+  .form-group {
+    flex: 1;
+  }
+
+  .form-row .form-group + .form-group {
+    margin-left: 1rem;
+  }
+
+  /* Ajustes de tamaño del contenedor en pantallas más grandes */
+  .container {
+    padding: 3rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-top: -1rem; /* Ajusta este valor según sea necesario */
+  }
+
+  button {
+    width: auto;
+    align-self: flex-start;
+  }
+}

@@ -32,6 +32,10 @@ class App {
         await Helpers.loadPage('./resources/html/delete-customer.html', 'main')
         App.#deleteCustomers()
         break
+      case 'Agregar Mercancia':
+        await Helpers.loadPage('./resources/html/add-merchandise.html', 'main')
+        App.#addMerchandise()
+        break
       default:
         console.warn(`Problemas con la opción "${option}"`)
     }
@@ -260,6 +264,74 @@ class App {
       }
     })
   }
-}
 
+  static #addMerchandise() {
+    App.#loadClients()
+    document.querySelector('#add-merchandise').addEventListener('click', App.#handleAddMerchandise)
+  }
+
+  static async #loadClients() {
+    try {
+      const response = await Helpers.fetchData(`${App.#urlAPI}/cliente`)
+      if (response.message === 'ok') {
+        const clientSelect = document.querySelector('#cliente')
+        const options = Helpers.toOptionList({
+          items: response.data,
+          value: 'id',
+          text: 'nombre',
+          firstOption: 'Seleccione un cliente',
+        })
+        clientSelect.innerHTML = options
+      }
+    } catch (error) {
+      console.error('Error loading clients:', error)
+    }
+  }
+
+  static async #handleAddMerchandise(e) {
+    e.preventDefault()
+    const merchandiseData = App.#getMerchandiseData()
+    const { isValid, errorMessage } = Helpers.validateMerchandise(merchandiseData)
+
+    if (!isValid) {
+      Helpers.showMessage(document.querySelector('#add-merchandise-form'), errorMessage, false)
+      return
+    }
+
+    try {
+      const response = await fetch(`${App.#urlAPI}/mercancia`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(merchandiseData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Problema de acceso al recurso: ${response.status} - ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      console.info('Mercancía agregada', result)
+      Helpers.showMessage(document.querySelector('#add-merchandise-form'), 'Mercancía agregada exitosamente', true)
+      document.querySelector('#add-merchandise-form').reset()
+    } catch (error) {
+      console.error('Error al agregar la mercancía:', error)
+      Helpers.showMessage(document.querySelector('#add-merchandise-form'), `Error al agregar la mercancía: ${error.message}`, false)
+    }
+  }
+
+  static #getMerchandiseData() {
+    return {
+      contenido: document.querySelector('#contenido').value,
+      ancho: parseFloat(document.querySelector('#ancho').value),
+      alto: parseFloat(document.querySelector('#alto').value),
+      largo: parseFloat(document.querySelector('#largo').value),
+      fechaHoraIngreso: document.querySelector('#fechaHoraIngreso').value,
+      fechaHoraSalida: document.querySelector('#fechaHoraSalida').value,
+      bodega: document.querySelector('#bodega').value,
+      cliente: document.querySelector('#cliente').value,
+    }
+  }
+}
 App.main()

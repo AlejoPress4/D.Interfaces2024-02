@@ -145,6 +145,51 @@ export default class Helpers {
     element.appendChild(messageElement)
     setTimeout(() => messageElement.remove(), 5000)
   }
+
+  static validateMerchandise(data) {
+    let isValid = true
+    let errorMessage = ''
+
+    if (!data.contenido || data.contenido.length > 100) {
+      isValid = false
+      errorMessage += 'El contenido debe tener entre 1 y 100 caracteres.\n'
+    }
+    if (!data.ancho || isNaN(data.ancho) || data.ancho <= 0) {
+      isValid = false
+      errorMessage += 'El ancho debe ser un número positivo.\n'
+    }
+    if (!data.alto || isNaN(data.alto) || data.alto <= 0) {
+      isValid = false
+      errorMessage += 'El alto debe ser un número positivo.\n'
+    }
+    if (!data.largo || isNaN(data.largo) || data.largo <= 0) {
+      isValid = false
+      errorMessage += 'El largo debe ser un número positivo.\n'
+    }
+    if (!data.fechaHoraIngreso || !Helpers.isValidDate(data.fechaHoraIngreso)) {
+      isValid = false
+      errorMessage += 'La fecha y hora de ingreso no es válida.\n'
+    }
+    if (!data.fechaHoraSalida || !Helpers.isValidDate(data.fechaHoraSalida)) {
+      isValid = false
+      errorMessage += 'La fecha y hora de salida no es válida.\n'
+    }
+    if (!data.bodega || data.bodega.length > 50) {
+      isValid = false
+      errorMessage += 'La bodega debe tener entre 1 y 50 caracteres.\n'
+    }
+    if (!data.cliente) {
+      isValid = false
+      errorMessage += 'Debe seleccionar un cliente.\n'
+    }
+
+    return { isValid, errorMessage }
+  }
+
+  static isValidDate(dateString) {
+    const date = new Date(dateString)
+    return !isNaN(date.getTime())
+  }
 }
 
 /**

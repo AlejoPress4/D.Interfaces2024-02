@@ -1,0 +1,406 @@
+// Agregue a este archivo todas y cada una de las peticiones HTTP que se requieren para pruebas
+// de lo contrario se utilizará uno por defecto con todas las peticiones de pruebas necesarias.
+// Si su archivo de pruebas no está completo, también se utilizará  el archivo por defecto.
+
+
+### Tenga en cuenta que debe asignar el puerto correcto de salida
+
+@url = http://localhost:7070
+
+### Saludo de bienvenida
+GET {{url}}
+
+### listar los estados de los envíos
+GET {{url}}/envio/estados
+
+// ---------------------- CRUD DE CLIENTES ----------------------
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0001",
+    "nombre": "Carlos Cuesta Iglesias",
+    "direccion": "Edificio del parque, piso 2, Ucaldas",
+    "telefono": "3115551234",
+    "ciudad": "Manizales"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0002",
+    "nombre": "Ana María López Pérez",
+    "direccion": "Calle 50 #12B-35, Barrio La Francia",
+    "telefono": "3126789012",
+    "ciudad": "Pereira"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0003",
+    "nombre": "Juan David Ramírez Castro",
+    "direccion": "Carrera 13 #25-45, Edificio Galaxia, apto 302",
+    "telefono": "3004567890",
+    "ciudad": "Medellín"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0004",
+    "nombre": "Sofia González Villa",
+    "direccion": "Vereda La Palma, Finca El Paraíso",
+    "telefono": "3151234567",
+    "ciudad": "Armenia"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0005",
+    "nombre": "Diego Hernández Moreno",
+    "direccion": "Avenida Bolívar #15-89, Centro Comercial El Dorado",
+    "telefono": "3219876543",
+    "ciudad": "Bogotá"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "id": "C0006",
+    "nombre": "Laura Patiño Salazar",
+    "direccion": "Urbanización Los Rosales, Manzana 3, Casa 12",
+    "telefono": "3187654321",
+    "ciudad": "Cali"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Bogotá",
+    "direccion": "Calle 100 # 15B - 32",
+    "id": "C0007",
+    "telefono": "3112345678",
+    "nombre": "Carlos Alberto Pérez"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Medellín",
+    "direccion": "Avenida El Poblado",
+    "id": "C0008",
+    "telefono": "3059876543",
+    "nombre": "María Fernanda Gómez"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Cali",
+    "direccion": "Urbanización Ciudad Jardín",
+    "id": "C0009",
+    "telefono": "3124567890",
+    "nombre": "Juan Sebastián Herrera"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Barranquilla",
+    "direccion": "Carrera 51",
+    "id": "C0010",
+    "telefono": "3191234567",
+    "nombre": "Laura Valentina Ramírez"
+}
+
+### agregar un cliente con ID conocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "ciudad": "Pereira",
+    "direccion": "Avenida 30 de Agosto",
+    "id": "C0011",
+    "telefono": "3139876543",
+    "nombre": "Daniel Felipe González"
+}
+
+### agregar un cliente con ID desconocido
+POST {{url}}/cliente
+Content-Type: application/json; charset=utf-8
+
+{
+    "nombre": "David Andrés García",
+    "direccion": "Mercaldas La Sultana",
+    "telefono": "3115550002",
+    "ciudad": "Manizales"
+}
+
+### listar todos los cliente registrados
+GET {{url}}/cliente
+
+### Buscar un cliente dado su índice
+GET {{url}}/cliente/indice/1
+
+### Buscar un cliente dado su ID
+GET {{url}}/cliente/id/C0001
+
+### Buscar por ID y actualizar algunos o todos los datos de un cliente
+PATCH {{url}}/cliente/0A7FQ
+Content-Type: application/json; charset=utf-8
+
+{
+  "nombre": "David Bohm",
+  "direccion": "Laboratorio de física cuántica, LFCB",
+  "telefono": "3115551010",
+  "ciudad": "Bogotá"
+}
+
+### Eliminar un cliente dado su ID
+DELETE {{url}}/cliente/C0011
+
+// ---------------------- CRUD DE MERCANCÍAS ----------------------
+
+### agregar mercancía (para mercancía, el ID se autogenera siempre)
+POST {{url}}/mercancia
+Content-Type: application/json; charset=utf-8
+
+{
+    "contenido": "Avena en bultos de 12 kilos",
+    "ancho": 3.2,
+    "alto": 2.4,
+    "largo": 3,
+    "fechaHoraIngreso": "2024-10-04T14:35",
+    "fechaHoraSalida": "2024-10-12T16:00",
+    "bodega": "Zona industrial La Enea, Manizales",
+    "cliente": "0A7FQ"
+}
+
+### listar todas las mercancías registradas en depósito
+GET {{url}}/mercancia
+
+### Buscar una mercancía dado su índice
+GET {{url}}/mercancia/indice/0
+
+### Buscar una mercancía dado su ID
+GET {{url}}/mercancia/id/0A7FQ
+
+### Buscar por ID y actualizar algunos o todos los datos de una mercancía en depósito
+PATCH {{url}}/mercancia/6CMRI0YZ
+Content-Type: application/json; charset=utf-8
+
+{
+    "contenido": "500 unidades de arándanos deshidratados x 500 gramos",
+    "ancho": 2.1,
+    "alto": 2.5,
+    "largo": 2.5,
+    "fechaHoraIngreso": "2024-10-07T12:00",
+    "fechaHoraSalida": "2024-10-20T12:00",
+    "bodega": "Zona industrial Juanchito, Bogotá",
+    "cliente": "0F7SD"
+}
+
+### Eliminar una mercancía dado su ID
+DELETE {{url}}/mercancia/6CMRI0YZ
+
+// ---------------------- CRUD DE PAQUETES ----------------------
+
+### agregar paquete (para envíos, el nroGuia y el 1er estado se generan automáticamente)
+POST {{url}}/paquete
+Content-Type: application/json; charset=utf-8
+
+{
+    "peso": 1200,
+    "fragil": true,
+    "contenido": "Componentes electrónicos",
+    "valorDeclarado": 200000,
+    "remitente": "C0001",
+    "destinatario": "0F7SD",
+}
+
+### agregar paquete (para envíos, el nroGuia y el 1er estado se generan automáticamente)
+POST {{url}}/paquete
+Content-Type: application/json; charset=utf-8
+
+{
+    "peso": 10,
+    "fragil": "dsdsd",
+    "contenido": "Semillas girasol libres de Monsanto",
+    "valorDeclarado": 200000,
+    "remitente": "C0003",
+    "destinatario": "C0004",
+}
+
+### listar todos los paquetes
+GET {{url}}/paquete
+
+### Buscar un paquete dado su índice
+GET {{url}}/paquete/indice/0
+
+### Buscar un paquete dado su número de guía
+GET {{url}}/paquete/id/8PNYJHMR
+
+### Buscar por nroGuia y actualizar algunos o todos los datos del paquete
+PATCH {{url}}/paquete/8PNYJHMR
+Content-Type: application/json; charset=utf-8
+
+{
+  "contenido": "Semillas girasol libres de Monsanto",
+  "peso": 1500,
+  "fragil": true,
+  "remitente": "C0004",
+  "destinatario": "C0001",
+  "estados": [
+    {
+      "estado": "RECIBIDO",
+      "fechaHora": "2024-10-08T19:29:44"
+    }
+  ]
+}
+
+### Eliminar un paquete dado su número de guía
+DELETE {{url}}/paquete/8PNYJHMR
+
+// ---------------------- CRUD DE BULTOS ----------------------
+
+### agregar un bulto (para envíos, el nroGuia y el 1er estado se generan automáticamente)
+POST {{url}}/bulto
+Content-Type: application/json; charset=utf-8
+
+{
+    "peso": 3000,
+    "fragil": false,
+    "contenido": "Panela en atados",
+    "valorDeclarado": 100000,
+    "remitente": "0F7SD",
+    "destinatario": "C0001",
+}
+
+### listar todos los paquetes
+GET {{url}}/bulto
+
+### Buscar un paquete dado su índice
+GET {{url}}/bulto/indice/0
+
+### Buscar un paquete dado su número de guía
+GET {{url}}/bulto/id/IB8KR6IL
+
+### Buscar por nroGuia y actualizar algunos o todos los datos del paquete
+PATCH {{url}}/bulto/IB8KR6IL
+Content-Type: application/json; charset=utf-8
+
+{
+  "contenido": "Papa R12 por 25 Kilos",
+  "peso": 3000,
+  "fragil": false,
+  "remitente": "0F7SD",
+  "valorDeclarado": 100000,
+  "destinatario": "C0001",
+  "estados": [
+    {
+      "estado": "RECIBIDO",
+      "fechaHora": "2024-10-09T11:29:33"
+    }
+  ]
+}
+
+### Eliminar un paquete dado su número de guía
+DELETE {{url}}/bulto/AFOQJW4R
+
+// ---------------------- CRUD DE SOBRES ----------------------
+
+### agregar un sobre (para envíos, el nroGuia y el 1er estado se generan automáticamente)
+POST {{url}}/sobre
+Content-Type: application/json; charset=utf-8
+
+{
+    "remitente": "C0001",
+    "destinatario": "C0001"
+}
+
+### listar todos los sobres
+GET {{url}}/sobre
+
+### Buscar un sobre dado su índice
+GET {{url}}/sobre/indice/0
+
+### Buscar un sobre dado su número de guía
+GET {{url}}/sobre/id/1BECQX7N
+
+### Buscar por nroGuia y actualizar algunos o todos los datos del sobre
+PATCH {{url}}/sobre/1BECQX7N
+Content-Type: application/json; charset=utf-8
+
+{
+  "contenido": "Documentos notariales",
+  "certificado": false
+}
+
+### Eliminar un sobre dado su número de guía
+DELETE {{url}}/sobre/1BECQX7N
+
+// ---------------------- CRUD DE CAJAS ----------------------
+
+### agregar una caja (para envíos, el nroGuia y el 1er estado se generan automáticamente)
+POST {{url}}/caja
+Content-Type: application/json; charset=utf-8
+
+{
+    "remitente": "C0009",
+    "destinatario": "C0003",
+    "peso": 4,
+    "fragil": true,
+    "contenido": "Manzanas californianas",
+    "valorDeclarado": 400000,
+    "ancho": 4.5,
+    "largo": 4.4,
+    "alto": 4.3
+}
+
+### listar todas las cajas
+GET {{url}}/caja
+
+### Buscar una caja dado su índice
+GET {{url}}/caja/indice/0
+
+### Buscar una caja dado su número de guía
+GET {{url}}/caja/id/A1X44KMT
+
+### Buscar por nroGuia y actualizar algunos o todos los datos de la caja
+PATCH {{url}}/caja/5P16GPC9
+Content-Type: application/json; charset=utf-8
+
+{
+    "fragil": false,
+    "contenido": "Manzanas chilenas",
+    "valorDeclarado": 300000,
+    "ancho": 1.5,
+    "largo": 3.1,
+    "alto": 2.2
+}
+
+### Eliminar una caja dado su número de guía
+DELETE {{url}}/caja/A1X44KMT
+
