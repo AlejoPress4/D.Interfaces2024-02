@@ -1,0 +1,2 @@
+- Ejecute `npm install` antes de probar este template
+- Use siempre LiveServe para ejecutar sus proyectos.

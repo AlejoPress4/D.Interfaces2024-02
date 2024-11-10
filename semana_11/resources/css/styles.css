@@ -1,0 +1,26 @@
+/* custom.css */
+
+/* Cambiar el color de fondo de la barra de navegación */
+.navbar {
+  background-color: #343a40 !important;
+}
+
+/* Cambiar el color del texto de los enlaces de navegación */
+.nav-link {
+  color: #ffffff !important;
+}
+
+/* Cambiar el color de fondo de los elementos de la tabla */
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1 !important;
+}
+
+/* Cambiar el color de fondo del encabezado de la tabla */
+.table-light {
+  background-color: #e9ecef !important;
+}
+
+/* Cambiar el color del texto de los encabezados de la tabla */
+.table thead th {
+  color: #495057 !important;
+}
