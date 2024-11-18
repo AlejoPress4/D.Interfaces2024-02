@@ -9,8 +9,8 @@ class App {
 
     try {
       // Realizar la solicitud para obtener los datos de los clientes
-      const respuesta = await fetch('http://localhost:7070/cliente')
-      const datos = await respuesta.json()
+      const respuesta = await axios.get('http://localhost:7070/cliente')
+      const datos = respuesta.data
 
       // Limpiar el tbody antes de agregar datos
       tbody.innerHTML = ''
