@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchAll, fetchById, create, update, remove, fetchByRemitente } from '@/services/api'
+import { fetchAll, fetchById, create, update, remove, fetchSobresByRemitente } from '@/services/api'
 
 export const useSobreStore = defineStore('sobre', {
   state: () => ({
@@ -13,7 +13,7 @@ export const useSobreStore = defineStore('sobre', {
       return await fetchById('sobre', id)
     },
     async fetchSobreByRemitente(remitente) {
-      return await fetchByRemitente('sobre', remitente)
+      return await fetchSobresByRemitente(remitente)
     },
     async createSobre(sobreData) {
       const newSobre = await create('sobre', sobreData)

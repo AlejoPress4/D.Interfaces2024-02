@@ -1,32 +1,24 @@
 <template>
   <div class="container-fluid py-4">
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 class="mb-0">Gestión de Mercancías</h2>
-          <button
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#mercanciaModal"
-            @click="prepareNewMercancia"
-          >
-            <i class="bi bi-plus-lg me-2"></i>Nueva Mercancía
-          </button>
-        </div>
-      </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="m-0">Gestión de Mercancías</h2>
+      <button class="btn btn-primary d-flex align-items-center gap-2" @click="openCreateModal">
+        <i class="bi bi-plus-lg"></i>
+        Nueva Mercancía
+      </button>
     </div>
 
-    <div class="card">
+    <div class="card mb-4">
       <div class="card-body">
-        <!-- Search Bar -->
-        <div class="row mb-4">
-          <div class="col-md-6 col-lg-4">
+        <div class="row">
+          <div class="col-md-6">
             <div class="input-group">
               <input
                 v-model="searchQuery"
                 type="text"
                 class="form-control"
-                placeholder="Buscar mercancías..."
+                placeholder="Buscar por ID o contenido..."
+                @keyup.enter="handleSearch"
               />
               <button class="btn btn-outline-secondary" type="button" @click="handleSearch">
                 <i class="bi bi-search"></i>
@@ -34,58 +26,51 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Loading State -->
-        <div v-if="loading" class="text-center py-4">
+    <div class="card">
+      <div class="card-body">
+        <div v-if="mercanciaStore.loading" class="text-center py-5">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
           </div>
         </div>
 
-        <!-- Error State -->
-        <div v-else-if="error" class="alert alert-danger" role="alert">
-          {{ error }}
+        <div v-else-if="mercanciaStore.error" class="alert alert-danger" role="alert">
+          {{ mercanciaStore.error }}
         </div>
 
-        <!-- Empty State -->
-        <div v-else-if="!mercancias.length" class="text-center py-4">
+        <div v-else-if="!mercanciaStore.mercancias.length" class="text-center py-5">
           <i class="bi bi-box-seam display-4 text-muted"></i>
-          <p class="mt-2 text-muted">No se encontraron mercancías</p>
+          <p class="mt-3 text-muted">No se encontraron mercancías</p>
         </div>
 
-        <!-- Data Table -->
         <div v-else class="table-responsive">
-          <table class="table table-hover table-striped">
+          <table class="table table-hover align-middle">
             <thead class="table-light">
               <tr>
-                <th class="px-3">Contenido</th>
-                <th class="px-3">Dimensiones</th>
-                <th class="px-3">Fecha/Hora</th>
-                <th class="px-3">Ubicación</th>
-                <th class="px-3">Cliente</th>
-                <th class="text-center px-3">Acciones</th>
+                <th>ID</th>
+                <th>Contenido</th>
+                <th>Dimensiones</th>
+                <th>Fecha/Hora</th>
+                <th>Bodega</th>
+                <th>Cliente</th>
+                <th class="text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="mercancia in mercancias" :key="mercancia.id">
-                <td class="px-3">
-                  <div class="d-flex align-items-center">
-                    <div>
-                      <div class="fw-semibold">{{ mercancia.contenido }}</div>
-                      <small class="text-muted">ID: {{ mercancia.id }}</small>
-                    </div>
-                  </div>
+              <tr v-for="mercancia in mercanciaStore.mercancias" :key="mercancia.id">
+                <td>{{ mercancia.id }}</td>
+                <td>{{ mercancia.contenido }}</td>
+                <td>{{ formatDimensiones(mercancia) }}</td>
+                <td>
+                  <div><strong>Ingreso:</strong> {{ formatDate(mercancia.fechaHoraIngreso) }}</div>
+                  <div><strong>Salida:</strong> {{ formatDate(mercancia.fechaHoraSalida) }}</div>
                 </td>
-                <td class="px-3">
-                  {{ mercancia.ancho }}x{{ mercancia.alto }}x{{ mercancia.largo }}
-                </td>
-                <td class="px-3">
-                  <div>Ingreso: {{ formatDateTime(mercancia.fechaHoraIngreso) }}</div>
-                  <div>Salida: {{ formatDateTime(mercancia.fechaHoraSalida) }}</div>
-                </td>
-                <td class="px-3">{{ mercancia.bodega }}</td>
-                <td class="px-3">{{ mercancia.cliente }}</td>
-                <td class="px-3">
+                <td>{{ mercancia.bodega }}</td>
+                <td>{{ getClienteName(mercancia.cliente) }}</td>
+                <td>
                   <div class="d-flex justify-content-center gap-2">
                     <button
                       class="btn btn-sm btn-outline-primary"
@@ -110,22 +95,32 @@
       </div>
     </div>
 
-    <!-- Modal para crear/editar mercancía -->
-    <div class="modal fade" id="mercanciaModal" tabindex="-1">
+    <!-- Modal Form -->
+    <div
+      class="modal fade"
+      id="mercanciaModal"
+      tabindex="-1"
+      aria-labelledby="mercanciaModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">
+            <h5 class="modal-title" id="mercanciaModalLabel">
               {{ isEditing ? 'Editar Mercancía' : 'Nueva Mercancía' }}
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
             <form @submit.prevent="handleSubmit" class="row g-3">
-              <div class="col-md-12">
-                <label for="contenido" class="form-label">Contenido</label>
+              <div class="col-12">
+                <label class="form-label">Contenido</label>
                 <textarea
-                  id="contenido"
                   v-model="formData.contenido"
                   class="form-control"
                   rows="3"
@@ -134,61 +129,74 @@
               </div>
 
               <div class="col-md-4">
-                <label for="ancho" class="form-label">Ancho</label>
+                <label class="form-label">Ancho (m)</label>
                 <input
-                  type="number"
-                  class="form-control"
-                  id="ancho"
                   v-model="formData.ancho"
+                  type="number"
+                  class="form-control"
                   step="0.01"
                   required
                 />
               </div>
 
               <div class="col-md-4">
-                <label for="alto" class="form-label">Alto</label>
+                <label class="form-label">Alto (m)</label>
                 <input
-                  type="number"
-                  class="form-control"
-                  id="alto"
                   v-model="formData.alto"
+                  type="number"
+                  class="form-control"
                   step="0.01"
                   required
                 />
               </div>
 
               <div class="col-md-4">
-                <label for="largo" class="form-label">Largo</label>
+                <label class="form-label">Largo (m)</label>
                 <input
+                  v-model="formData.largo"
                   type="number"
                   class="form-control"
-                  id="largo"
-                  v-model="formData.largo"
                   step="0.01"
                   required
                 />
               </div>
 
               <div class="col-md-6">
-                <label for="bodega" class="form-label">Bodega</label>
+                <label class="form-label">Fecha/Hora Ingreso</label>
                 <input
-                  type="text"
+                  v-model="formData.fechaHoraIngreso"
+                  type="datetime-local"
                   class="form-control"
-                  id="bodega"
-                  v-model="formData.bodega"
                   required
                 />
               </div>
 
               <div class="col-md-6">
-                <label for="cliente" class="form-label">Cliente</label>
+                <label class="form-label">Fecha/Hora Salida</label>
                 <input
-                  type="text"
+                  v-model="formData.fechaHoraSalida"
+                  type="datetime-local"
                   class="form-control"
-                  id="cliente"
-                  v-model="formData.cliente"
-                  required
                 />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Bodega</label>
+                <input v-model="formData.bodega" type="text" class="form-control" required />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Cliente</label>
+                <select v-model="formData.cliente" class="form-select" required>
+                  <option value="">Seleccione un cliente</option>
+                  <option
+                    v-for="cliente in mercanciaStore.clientes"
+                    :key="cliente.id"
+                    :value="cliente.id"
+                  >
+                    {{ cliente.nombre }}
+                  </option>
+                </select>
               </div>
 
               <div class="col-12 text-end">
@@ -209,15 +217,16 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useMercanciaStore } from '@/stores/mercancia'
+import { useMercanciaStore } from '@/stores/mercancia.js'
+import { useToast } from 'vue-toastification'
 
 const mercanciaStore = useMercanciaStore()
-const mercancias = ref([])
+const toast = useToast()
+
 const searchQuery = ref('')
-const loading = ref(false)
-const error = ref(null)
 const isEditing = ref(false)
 const formData = ref({
+  id: '',
   contenido: '',
   ancho: '',
   alto: '',
@@ -228,98 +237,114 @@ const formData = ref({
   cliente: '',
 })
 
+let modal = null
+
 onMounted(async () => {
-  await loadMercancias()
+  modal = new bootstrap.Modal(document.getElementById('mercanciaModal'))
+  await loadInitialData()
 })
 
-const loadMercancias = async () => {
-  loading.value = true
-  error.value = null
+const loadInitialData = async () => {
   try {
-    await mercanciaStore.fetchMercancias()
-    mercancias.value = mercanciaStore.mercancias
-  } catch (e) {
-    error.value = 'Error al cargar las mercancías'
-  } finally {
-    loading.value = false
+    await Promise.all([mercanciaStore.fetchMercancias(), mercanciaStore.fetchClientesForSelect()])
+  } catch (error) {
+    toast.error('Error al cargar los datos iniciales')
   }
 }
 
 const handleSearch = async () => {
-  if (searchQuery.value.trim()) {
-    loading.value = true
-    error.value = null
-    try {
-      const result = await mercanciaStore.fetchMercanciaByNombre(searchQuery.value)
-      mercancias.value = Array.isArray(result) ? result : [result]
-    } catch (e) {
-      error.value = 'Error al buscar mercancías'
-    } finally {
-      loading.value = false
+  try {
+    if (!searchQuery.value.trim()) {
+      await mercanciaStore.fetchMercancias()
+      return
     }
-  } else {
-    await loadMercancias()
+
+    // Try to fetch by ID first
+    if (searchQuery.value.match(/^[0-9a-fA-F]{24}$/)) {
+      const mercancia = await mercanciaStore.fetchMercancia(searchQuery.value)
+      if (mercancia) {
+        mercanciaStore.mercancias = [mercancia]
+        return
+      }
+    }
+
+    // If not found by ID or not an ID, search by name
+    const result = await mercanciaStore.fetchMercanciaByNombre(searchQuery.value)
+    mercanciaStore.mercancias = Array.isArray(result) ? result : [result]
+  } catch (error) {
+    toast.error('Error al buscar mercancías')
   }
 }
 
-const prepareNewMercancia = () => {
+const openCreateModal = () => {
   isEditing.value = false
   formData.value = {
     contenido: '',
     ancho: '',
     alto: '',
     largo: '',
-    fechaHoraIngreso: new Date().toISOString(),
+    fechaHoraIngreso: new Date().toISOString().slice(0, 16),
     fechaHoraSalida: '',
     bodega: '',
     cliente: '',
   }
+  modal.show()
 }
 
 const editMercancia = (mercancia) => {
   isEditing.value = true
-  formData.value = { ...mercancia }
-  const modal = new bootstrap.Modal(document.getElementById('mercanciaModal'))
+  formData.value = {
+    ...mercancia,
+    fechaHoraIngreso: mercancia.fechaHoraIngreso
+      ? new Date(mercancia.fechaHoraIngreso).toISOString().slice(0, 16)
+      : '',
+    fechaHoraSalida: mercancia.fechaHoraSalida
+      ? new Date(mercancia.fechaHoraSalida).toISOString().slice(0, 16)
+      : '',
+  }
   modal.show()
 }
 
 const confirmDelete = async (mercancia) => {
-  if (confirm('¿Está seguro de que desea eliminar esta mercancía?')) {
-    loading.value = true
-    error.value = null
-    try {
-      await mercanciaStore.deleteMercancia(mercancia.id)
-      await loadMercancias()
-    } catch (e) {
-      error.value = 'Error al eliminar la mercancía'
-    } finally {
-      loading.value = false
-    }
+  if (!confirm(`¿Está seguro de que desea eliminar la mercancía ${mercancia.id}?`)) return
+
+  try {
+    await mercanciaStore.deleteMercancia(mercancia.id)
+    toast.success('Mercancía eliminada correctamente')
+    await mercanciaStore.fetchMercancias()
+  } catch (error) {
+    toast.error('Error al eliminar la mercancía')
   }
 }
 
 const handleSubmit = async () => {
-  loading.value = true
-  error.value = null
   try {
     if (isEditing.value) {
       await mercanciaStore.updateMercancia(formData.value.id, formData.value)
+      toast.success('Mercancía actualizada correctamente')
     } else {
       await mercanciaStore.createMercancia(formData.value)
+      toast.success('Mercancía creada correctamente')
     }
-    await loadMercancias()
-    const modal = bootstrap.Modal.getInstance(document.getElementById('mercanciaModal'))
     modal.hide()
-  } catch (e) {
-    error.value = 'Error al guardar la mercancía'
-  } finally {
-    loading.value = false
+    await mercanciaStore.fetchMercancias()
+  } catch (error) {
+    toast.error('Error al guardar la mercancía')
   }
 }
 
-const formatDateTime = (dateString) => {
+const formatDimensiones = (mercancia) => {
+  return `${mercancia.ancho}x${mercancia.alto}x${mercancia.largo} m`
+}
+
+const formatDate = (dateString) => {
   if (!dateString) return 'No establecida'
   return new Date(dateString).toLocaleString()
+}
+
+const getClienteName = (clienteId) => {
+  const cliente = mercanciaStore.clientes.find((c) => c.id === clienteId)
+  return cliente ? cliente.nombre : 'Cliente no especificado'
 }
 </script>
 

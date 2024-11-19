@@ -1,120 +1,136 @@
 import axios from 'axios'
 
-// Base URL for the API
-const API_URL = 'http://localhost:7070'
-
-// Create an Axios instance for all API calls
-const api = axios.create({
-  baseURL: API_URL,
+// Configuración base para Axios
+const apiClient = axios.create({
+  baseURL: 'http://localhost:7070',
+  timeout: 5000,
   headers: {
     'Content-Type': 'application/json; charset=utf-8',
   },
 })
 
-/**
- * Generic function for GET requests.
- * @param {string} endpoint - The API endpoint.
- * @param {object} [params] - Optional query parameters.
- * @returns {Promise<any>} The response data.
- */
-export const fetchAll = async (endpoint, params = {}) => {
-  const response = await api.get(endpoint, { params })
-  console.log(response.data.data)
-  return response.data.data
+// Función genérica para manejar errores
+const handleRequestError = (error) => {
+  console.error('Error en la petición:', error.response || error.message)
+  throw error.response?.data || error.message
 }
 
-/**
- * Generic function for GET requests by ID.
- * @param {string} endpoint - The API endpoint.
- * @param {string | number} id - The ID to fetch.
- * @returns {Promise<any>} The response data.
- */
+// **Peticiones GET**
+
+// Obtener todos los elementos de un recurso
+export const fetchAll = async (endpoint) => {
+  try {
+    const response = await apiClient.get(`/${endpoint}`)
+    return response.data.data
+  } catch (error) {
+    handleRequestError(error)
+  }
+}
+
+// Obtener un elemento por su ID
 export const fetchById = async (endpoint, id) => {
-  const response = await api.get(`${endpoint}/id/${id}`)
-  return response.data
+  try {
+    const response = await apiClient.get(`/${endpoint}/${id}`)
+    return response
+  } catch (error) {
+    handleRequestError(error)
+  }
 }
 
-/**
- * Generic function for GET requests by custom property.
- * @param {string} endpoint - The API endpoint.
- * @param {string} property - The property to search by.
- * @param {string | number} value - The property value.
- * @returns {Promise<any>} The response data.
- */
-export const fetchByProperty = async (endpoint, property, value) => {
-  const response = await api.get(`${endpoint}/${property}/${value}`)
-  return response.data
+// Obtener un elemento filtrado por remitente
+export const fetchByRemitente = async (endpoint, remitente) => {
+  try {
+    const response = await apiClient.get(`/${endpoint}?remitente=${remitente}`)
+    return response
+  } catch (error) {
+    handleRequestError(error)
+  }
 }
 
-/**
- * Generic function for POST requests.
- * @param {string} endpoint - The API endpoint.
- * @param {object} data - The data to create.
- * @returns {Promise<any>} The response data.
- */
-export const create = async (endpoint, data) => {
-  const response = await api.post(endpoint, data)
-  return response.data
-}
-
-/**
- * Generic function for PATCH requests.
- * @param {string} endpoint - The API endpoint.
- * @param {string | number} id - The ID to update.
- * @param {object} data - The updated data.
- * @returns {Promise<any>} The response data.
- */
-export const update = async (endpoint, id, data) => {
-  const response = await api.patch(`${endpoint}/${id}`, data)
-  return response.data
-}
-
-/**
- * Generic function for DELETE requests.
- * @param {string} endpoint - The API endpoint.
- * @param {string | number} id - The ID to delete.
- * @returns {Promise<void>} Nothing.
- */
-export const remove = async (endpoint, id) => {
-  await api.delete(`${endpoint}/${id}`)
-}
-
-/**
- * Specific function for fetching envio estados.
- * @returns {Promise<any>} The response data for envio estados.
- */
-export const fetchEnvioEstados = async () => {
-  return await fetchAll('/envio/estados')
-}
-
-/**
- * Specific function for fetching data by nombre.
- * @param {string} endpoint - The API endpoint.
- * @param {string} nombre - The nombre to search for.
- * @returns {Promise<any>} The response data.
- */
+// Obtener un elemento filtrado por nombre (cliente o mercancía)
 export const fetchByNombre = async (endpoint, nombre) => {
-  return await fetchByProperty(endpoint, 'nombre', nombre)
+  try {
+    const response = await apiClient.get(`/${endpoint}?nombre=${nombre}`)
+    return response
+  } catch (error) {
+    handleRequestError(error)
+  }
 }
 
+// **Peticiones POST**
+
+// Crear un nuevo elemento
+export const create = async (endpoint, data) => {
+  try {
+    const response = await apiClient.post(`/${endpoint}`, data)
+    return response
+  } catch (error) {
+    handleRequestError(error)
+  }
+}
+
+// **Peticiones PUT**
+
+// Actualizar un elemento existente
+export const update = async (endpoint, id, data) => {
+  try {
+    const response = await apiClient.put(`/${endpoint}/${id}`, data)
+    return response
+  } catch (error) {
+    handleRequestError(error)
+  }
+}
+
+// **Peticiones DELETE**
+
+// Eliminar un elemento por su ID
+export const remove = async (endpoint, id) => {
+  try {
+    const response = await apiClient.delete(`/${endpoint}/${id}`)
+    return response
+  } catch (error) {
+    handleRequestError(error)
+  }
+}
+
+// **Funciones adicionales específicas para casos de uso**
+
 /**
- * Alias function for fetching clientes by nombre.
- * @param {string} nombre - The nombre of the cliente to fetch.
- * @returns {Promise<any>} The response data for the cliente.
+ * Obtener cliente por nombre
+ * @param {string} nombre - Nombre del cliente
  */
 export const fetchClienteByNombre = async (nombre) => {
-  return await fetchByNombre('clientes', nombre)
+  return fetchByNombre('cliente', nombre)
 }
 
 /**
- * Specific function for fetching data by remitente.
- * @param {string} endpoint - The API endpoint.
- * @param {string} remitente - The remitente to search for.
- * @returns {Promise<any>} The response data.
+ * Obtener bultos por remitente
+ * @param {string} remitente - Nombre del remitente
  */
-export const fetchByRemitente = async (endpoint, remitente) => {
-  return await fetchByProperty(endpoint, 'remitente', remitente)
+export const fetchBultosByRemitente = async (remitente) => {
+  return fetchByRemitente('bulto', remitente)
 }
 
-// Export the Axios instance for direct use if needed
-export default api
+/**
+ * Obtener cajas por remitente
+ * @param {string} remitente - Nombre del remitente
+ */
+export const fetchCajasByRemitente = async (remitente) => {
+  return fetchByRemitente('caja', remitente)
+}
+
+/**
+ * Obtener sobres por remitente
+ * @param {string} remitente - Nombre del remitente
+ */
+export const fetchSobresByRemitente = async (remitente) => {
+  return fetchByRemitente('sobre', remitente)
+}
+
+/**
+ * Obtener mercancía por nombre
+ * @param {string} nombre - Nombre de la mercancía
+ */
+export const fetchMercanciaByNombre = async (nombre) => {
+  return fetchByNombre('mercancia', nombre)
+}

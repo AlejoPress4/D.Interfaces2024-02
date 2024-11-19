@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchAll, fetchById, create, update, remove, fetchByRemitente } from '@/services/api'
+import { fetchAll, fetchById, create, update, remove, fetchCajasByRemitente } from '@/services/api'
 
 export const useCajaStore = defineStore('caja', {
   state: () => ({
@@ -13,7 +13,7 @@ export const useCajaStore = defineStore('caja', {
       return await fetchById('caja', id)
     },
     async fetchCajaByRemitente(remitente) {
-      return await fetchByRemitente('caja', remitente)
+      return await fetchCajasByRemitente(remitente)
     },
     async createCaja(cajaData) {
       const newCaja = await create('caja', cajaData)

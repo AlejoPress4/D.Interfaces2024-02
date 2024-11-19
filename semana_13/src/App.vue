@@ -54,7 +54,6 @@ import PaquetesView from './views/paquetesView.vue'
 import BultosView from './views/bultosView.vue'
 import SobresView from './views/sobresView.vue'
 import CajasView from './views/cajasView.vue'
-import listaClientesView from './views/listaClientesView.vue'
 
 const routes = [
   { name: 'Clientes', component: ClientesView },
@@ -63,7 +62,6 @@ const routes = [
   { name: 'Bultos', component: BultosView },
   { name: 'Sobres', component: SobresView },
   { name: 'Cajas', component: CajasView },
-  { name: 'Lista de Clientes', component: listaClientesView },
 ]
 
 const showMenu = ref(true)
