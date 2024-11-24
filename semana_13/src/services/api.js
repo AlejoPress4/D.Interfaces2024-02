@@ -31,7 +31,7 @@ export const fetchAll = async (endpoint) => {
 export const fetchById = async (endpoint, id) => {
   try {
     const response = await apiClient.get(`/${endpoint}/${id}`)
-    return response
+    return response.data.data
   } catch (error) {
     handleRequestError(error)
   }
@@ -41,7 +41,7 @@ export const fetchById = async (endpoint, id) => {
 export const fetchByRemitente = async (endpoint, remitente) => {
   try {
     const response = await apiClient.get(`/${endpoint}?remitente=${remitente}`)
-    return response
+    return response.data.data
   } catch (error) {
     handleRequestError(error)
   }
@@ -51,7 +51,7 @@ export const fetchByRemitente = async (endpoint, remitente) => {
 export const fetchByNombre = async (endpoint, nombre) => {
   try {
     const response = await apiClient.get(`/${endpoint}?nombre=${nombre}`)
-    return response
+    return response.data.data
   } catch (error) {
     handleRequestError(error)
   }
@@ -63,7 +63,7 @@ export const fetchByNombre = async (endpoint, nombre) => {
 export const create = async (endpoint, data) => {
   try {
     const response = await apiClient.post(`/${endpoint}`, data)
-    return response
+    return response.data.data
   } catch (error) {
     handleRequestError(error)
   }
@@ -75,7 +75,7 @@ export const create = async (endpoint, data) => {
 export const update = async (endpoint, id, data) => {
   try {
     const response = await apiClient.put(`/${endpoint}/${id}`, data)
-    return response
+    return response.data.data
   } catch (error) {
     handleRequestError(error)
   }
@@ -87,7 +87,7 @@ export const update = async (endpoint, id, data) => {
 export const remove = async (endpoint, id) => {
   try {
     const response = await apiClient.delete(`/${endpoint}/${id}`)
-    return response
+    return response.data.data
   } catch (error) {
     handleRequestError(error)
   }

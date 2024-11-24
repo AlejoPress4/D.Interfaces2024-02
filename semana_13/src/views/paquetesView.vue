@@ -44,7 +44,9 @@
                 <td>{{ paquete.peso }} kg</td>
                 <td>
                   {{
-                    `${paquete.dimensiones.ancho}x${paquete.dimensiones.alto}x${paquete.dimensiones.largo}`
+                    paquete.dimensiones
+                      ? `${paquete.dimensiones.ancho}x${paquete.dimensiones.alto}x${paquete.dimensiones.largo}`
+                      : 'N/A'
                   }}
                 </td>
                 <td>{{ formatDate(paquete.fechaHoraIngreso) }}</td>
@@ -294,7 +296,10 @@ const handleSearch = async () => {
 
 const editPaquete = (paquete) => {
   selectedPaquete.value = paquete
-  formData.value = { ...paquete }
+  formData.value = {
+    ...paquete,
+    dimensiones: paquete.dimensiones || { ancho: '', alto: '', largo: '' },
+  }
   showEditModal.value = true
 }
 

@@ -31,6 +31,19 @@ export const useBultoStore = defineStore('bulto', {
       }
     },
 
+    async fetchBultoById(id) {
+      this.loading = true
+      try {
+        const response = await fetchById('bulto', id)
+        return this.normalizeBulto(response)
+      } catch (error) {
+        this.error = `Error al cargar el bulto: ${error.message}`
+        useToast().error(this.error)
+      } finally {
+        this.loading = false
+      }
+    },
+
     async createBulto(bultoData) {
       this.loading = true
       try {
@@ -45,11 +58,11 @@ export const useBultoStore = defineStore('bulto', {
       }
     },
 
-    async updateBulto(id, bultoData) {
+    async updateBulto(nroGuia, bultoData) {
       this.loading = true
       try {
-        const response = await update('bulto', id, bultoData)
-        const index = this.bultos.findIndex((b) => b.id === id)
+        const response = await update(`bulto/${nroGuia}`, bultoData)
+        const index = this.bultos.findIndex((b) => b.nroGuia === nroGuia)
         if (index !== -1) {
           this.bultos[index] = this.normalizeBulto(response)
         }
@@ -62,11 +75,11 @@ export const useBultoStore = defineStore('bulto', {
       }
     },
 
-    async deleteBulto(id) {
+    async deleteBulto(nroGuia) {
       this.loading = true
       try {
-        await remove('bulto', id)
-        this.bultos = this.bultos.filter((b) => b.id !== id)
+        await remove(`bulto/${nroGuia}`)
+        this.bultos = this.bultos.filter((b) => b.nroGuia !== nroGuia)
         useToast().success('Bulto eliminado exitosamente')
       } catch (error) {
         this.error = `Error al eliminar el bulto: ${error.message}`

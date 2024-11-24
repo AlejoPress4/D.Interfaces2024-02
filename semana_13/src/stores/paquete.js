@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { fetchAll, fetchById, create, update, remove, fetchByRemitente } from '@/services/api'
 import { useToast } from 'vue-toastification'
-import { useClienteStore } from './clients.js'
 
 export const usePaqueteStore = defineStore('paquete', {
   state: () => ({
@@ -10,100 +9,110 @@ export const usePaqueteStore = defineStore('paquete', {
     error: null,
   }),
   actions: {
-    setLoading(value) {
-      this.loading = value
-    },
-    setError(error) {
-      this.error = error
-      useToast().error(this.error)
-    },
-    setPaquetes(paquetes) {
-      this.paquetes = paquetes
-    },
     async fetchPaquetes() {
-      this.setLoading(true)
-      this.setError(null)
+      this.loading = true
+      this.error = null
       try {
-        const paquetes = await fetchAll('paquete')
-        this.setPaquetes(paquetes)
+        this.paquetes = await fetchAll('paquete')
+        useToast().success('Paquetes cargados exitosamente')
       } catch (error) {
-        this.setError('Error al cargar los paquetes: ' + error.message)
+        this.error = 'Error al cargar los paquetes: ' + error
+        useToast().error(this.error)
       } finally {
-        this.setLoading(false)
+        this.loading = false
       }
     },
+
     async fetchPaquete(id) {
-      this.setLoading(true)
-      this.setError(null)
+      this.loading = true
+      this.error = null
       try {
-        return await fetchById('paquete', id)
+        const paquete = await fetchById('paquete', id)
+        useToast().success('Paquete encontrado')
+        return paquete
       } catch (error) {
-        this.setError(`Error al buscar paquete con ID ${id}: ${error.message}`)
-        throw error
+        this.error = `Error al buscar paquete con ID ${id}: ${error}`
+        useToast().error(this.error)
+        return null
       } finally {
-        this.setLoading(false)
+        this.loading = false
       }
     },
-    async fetchPaqueteByRemitente(remitente) {
-      this.setLoading(true)
-      this.setError(null)
+
+    async searchPaquetes(query) {
+      this.loading = true
+      this.error = null
       try {
-        return await fetchByRemitente('paquete', remitente)
+        let result
+        if (query.match(/^[0-9a-fA-F]{24}$/)) {
+          // Si el query parece ser un ID de MongoDB
+          result = await this.fetchPaquete(query)
+          result = result ? [result] : []
+        } else {
+          result = await fetchByRemitente('paquete', query)
+        }
+        this.paquetes = Array.isArray(result) ? result : [result]
+        useToast().success(`Se encontraron ${this.paquetes.length} paquete(s)`)
+        return this.paquetes
       } catch (error) {
-        this.setError(`Error al buscar paquetes del remitente ${remitente}: ${error.message}`)
-        throw error
+        this.error = `Error al buscar paquetes: ${error}`
+        useToast().error(this.error)
+        return []
       } finally {
-        this.setLoading(false)
+        this.loading = false
       }
     },
+
     async createPaquete(paqueteData) {
-      this.setLoading(true)
-      this.setError(null)
+      this.loading = true
+      this.error = null
       try {
         const newPaquete = await create('paquete', paqueteData)
-        this.paquetes = [...this.paquetes, newPaquete]
+        this.paquetes.push(newPaquete)
         useToast().success('Paquete creado exitosamente')
         return newPaquete
       } catch (error) {
-        this.setError('Error al crear el paquete: ' + error.message)
-        throw error
+        this.error = 'Error al crear el paquete: ' + error
+        useToast().error(this.error)
+        return null
       } finally {
-        this.setLoading(false)
+        this.loading = false
       }
     },
+
     async updatePaquete(id, paqueteData) {
-      this.setLoading(true)
-      this.setError(null)
+      this.loading = true
+      this.error = null
       try {
         const updatedPaquete = await update('paquete', id, paqueteData)
-        this.paquetes = this.paquetes.map((p) => (p.id === id ? updatedPaquete : p))
+        const index = this.paquetes.findIndex((p) => p.id === id)
+        if (index !== -1) {
+          this.paquetes[index] = updatedPaquete
+        }
         useToast().success('Paquete actualizado exitosamente')
         return updatedPaquete
       } catch (error) {
-        this.setError(`Error al actualizar el paquete: ${error.message}`)
-        throw error
+        this.error = `Error al actualizar el paquete: ${error}`
+        useToast().error(this.error)
+        return null
       } finally {
-        this.setLoading(false)
+        this.loading = false
       }
     },
+
     async deletePaquete(id) {
-      this.setLoading(true)
-      this.setError(null)
+      this.loading = true
+      this.error = null
       try {
         await remove('paquete', id)
         this.paquetes = this.paquetes.filter((p) => p.id !== id)
         useToast().success('Paquete eliminado exitosamente')
       } catch (error) {
-        this.setError(`Error al eliminar el paquete: ${error.message}`)
-        throw error
+        this.error = `Error al eliminar el paquete: ${error}`
+        useToast().error(this.error)
       } finally {
-        this.setLoading(false)
+        this.loading = false
       }
-    },
-    async fetchClientes() {
-      const clienteStore = useClienteStore()
-      await clienteStore.fetchClientes()
-      return clienteStore.clientes
     },
   },
 })

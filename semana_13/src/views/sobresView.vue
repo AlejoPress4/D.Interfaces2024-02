@@ -282,7 +282,7 @@ const handleDelete = async () => {
     await sobreStore.deleteSobre(selectedSobre.value.id)
     await fetchSobres()
     showDeleteModal.value = false
-    toast.success('Sobre eliminado exitosamente')
+    // toast.success('Sobre eliminado exitosamente')
   } catch (error) {
     toast.error('Error al eliminar el sobre')
   }

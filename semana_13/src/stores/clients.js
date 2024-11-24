@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { fetchAll, fetchById, create, update, remove, fetchClienteByNombre } from '@/services/api'
+import { useToast } from 'vue-toastification'
 
 export const useClienteStore = defineStore('cliente', {
   state: () => ({
@@ -14,8 +15,10 @@ export const useClienteStore = defineStore('cliente', {
       try {
         const response = await fetchAll('cliente')
         this.clientes = response
+        useToast().success('Clientes cargados exitosamente')
       } catch (error) {
         this.error = 'Error al obtener clientes: ' + error.message
+        useToast().error(this.error)
         throw error
       } finally {
         this.loading = false
@@ -27,23 +30,35 @@ export const useClienteStore = defineStore('cliente', {
       this.error = null
       try {
         const response = await fetchById('cliente', id)
+        useToast().success('Cliente encontrado')
         return response
       } catch (error) {
         this.error = `Error al obtener cliente con ID ${id}: ${error.message}`
+        useToast().error(this.error)
         throw error
       } finally {
         this.loading = false
       }
     },
 
-    async fetchClienteByNombre(nombre) {
+    async searchClientes(query) {
       this.loading = true
       this.error = null
       try {
-        const response = await fetchClienteByNombre(nombre)
-        return response
+        let result
+        if (query.match(/^[0-9a-fA-F]{24}$/)) {
+          // Si el query parece ser un ID de MongoDB
+          result = await this.fetchCliente(query)
+          result = result ? [result] : []
+        } else {
+          result = await fetchClienteByNombre(query)
+        }
+        this.clientes = Array.isArray(result) ? result : [result]
+        useToast().success(`Se encontraron ${this.clientes.length} cliente(s)`)
+        return this.clientes
       } catch (error) {
-        this.error = `Error al buscar cliente con nombre "${nombre}": ${error.message}`
+        this.error = `Error al buscar clientes: ${error.message}`
+        useToast().error(this.error)
         throw error
       } finally {
         this.loading = false
@@ -56,9 +71,11 @@ export const useClienteStore = defineStore('cliente', {
       try {
         const response = await create('cliente', clienteData)
         this.clientes.push(response)
+        useToast().success('Cliente creado exitosamente')
         return response
       } catch (error) {
         this.error = 'Error al crear cliente: ' + error.message
+        useToast().error(this.error)
         throw error
       } finally {
         this.loading = false
@@ -74,9 +91,11 @@ export const useClienteStore = defineStore('cliente', {
         if (index !== -1) {
           this.clientes[index] = response
         }
+        useToast().success('Cliente actualizado exitosamente')
         return response
       } catch (error) {
         this.error = `Error al actualizar cliente con ID ${id}: ${error.message}`
+        useToast().error(this.error)
         throw error
       } finally {
         this.loading = false
@@ -89,6 +108,7 @@ export const useClienteStore = defineStore('cliente', {
       try {
         await remove('cliente', id)
         this.clientes = this.clientes.filter((c) => c.id !== id)
+        useToast().success('Cliente eliminado exitosamente')
       } catch (error) {
         if (error.response?.status === 400) {
           const message =
@@ -98,6 +118,7 @@ export const useClienteStore = defineStore('cliente', {
         } else {
           this.error = `Error al eliminar cliente con ID ${id}: ${error.message}`
         }
+        useToast().error(this.error)
         throw error
       } finally {
         this.loading = false
