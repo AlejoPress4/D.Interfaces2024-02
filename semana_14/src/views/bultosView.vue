@@ -225,6 +225,7 @@
 import { ref, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useBultoStore } from '@/stores/bulto.js'
+import BultoForm from '@/components/bultoForm.vue'
 
 const toast = useToast()
 const bultoStore = useBultoStore()

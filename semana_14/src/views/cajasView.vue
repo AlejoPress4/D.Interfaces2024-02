@@ -201,7 +201,7 @@ const handleDelete = async () => {
 
   try {
     await cajaStore.deleteCaja(selectedCaja.value.nroGuia)
-    deleteModal.hide()
+    // deleteModal.hide()
   } catch (error) {
     console.error('Error al eliminar caja:', error)
   }
