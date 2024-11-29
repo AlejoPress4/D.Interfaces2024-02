@@ -1,53 +1,32 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-
-type Estudiante = {
-  nombre: string;
-  correo: string;
-  fechaNacimiento: string;
-  notas: [number, number, number];
-  aprueba?: boolean;
-};
+import { HttpClient, } from '@angular/common/http';
+import { Inscripcion } from './inscripcion';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  imports: [CommonModule],
 })
 
-export class AppComponent {
-  private e1: Estudiante;
-  title: string;
+export class AppComponent implements OnInit {
+  data: Inscripcion[] = [];
+  private http = inject(HttpClient); 
 
-  constructor() {
-    this.title = 'Angular Tutorial';
-    this.e1 = {
-      nombre: 'Jorge Enrique Pérez',
-      correo: 'jperez@ucaldas.edu.co',
-      fechaNacimiento: '2012-12-25',
-      notas: [3.2, 2.3, 4.1],
-    };
-    this.e1.aprueba = this.getAprueba();
+  constructor() { 
+    console.log(this.data);
   }
 
-  getEstudiante(): Estudiante {
-    return this.e1;
-  }
-  
-  getPromedio(): number {
-    return (
-      this.e1.notas.reduce((total: number, nota: number) => (total += nota)) / 3
-    );
-  }
-  
-  getAprueba(): boolean {
-    return this.getPromedio() >= 3.0;
+  ngOnInit(): void {
+    this.http
+      .get<Inscripcion[]>('./assets/inscripciones.json')
+      .subscribe((response: Inscripcion[]) => {
+        console.log(response);
+        this.data = response;
+        // … otras pruebas …
+      });
   }
 }
-
-
-
-

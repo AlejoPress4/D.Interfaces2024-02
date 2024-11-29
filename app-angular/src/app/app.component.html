@@ -1,15 +1,1 @@
-<router-outlet>
-  <h1 class="text-3xl font-bold text-blue-500">Bienvenido a {{ title }}</h1>
-
-  <div class="m-6 rounded-lg bg-slate-300 bg-opacity-25 p-4 shadow-lg">
-    <p>Estudiante: {{ getEstudiante().nombre }}</p>
-    <p>Correo: {{ getEstudiante().correo }}</p>
-    <p>Fecha de nacimiento: {{ getEstudiante().fechaNacimiento }}</p>
-    <p>Notas:</p>
-    @for (nota of getEstudiante().notas; track $index) {
-      <p>Nota {{ $index + 1 }} : {{ nota }}</p>
-    }
-    <p>Promedio: {{ getPromedio().toFixed(1) }}</p>
-    <p>Aprueba: {{ getAprueba() ? "Si" : "No" }}</p>
-  </div>
-</router-outlet>
+<pre>{{ data | json }}</pre>
