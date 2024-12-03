@@ -1,6 +1,7 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InfoEstudiante } from '../inscripcion';
+import { ViewCounterService } from '../services/view-counter.service';
 
 @Component({
   selector: 'app-modal',
@@ -8,20 +9,47 @@ import { InfoEstudiante } from '../inscripcion';
   imports: [CommonModule],
   templateUrl: './modal.component.html'
 })
-export class ModalComponent {
+export class ModalComponent implements OnDestroy {
   @Input() dataEstudiante?: InfoEstudiante;
-  @Input() onClose: () => void = () => {};
   @ViewChild('dialog') dialogElement!: ElementRef<HTMLDialogElement>;
+  
+  viewCount: number = 0;
+  private sessionTimer: any;
+  private readonly SESSION_TIMEOUT = 10000; // cada 10 segundos
+
+  constructor(private viewCounterService: ViewCounterService) {}
 
   show() {
-    this.dialogElement.nativeElement.showModal();
+    if (this.dataEstudiante) {
+      this.viewCount = this.viewCounterService.incrementViewCount(this.dataEstudiante.estudiante.codigo);
+      this.dialogElement.nativeElement.showModal();
+      this.startSessionTimer();
+    }
   }
 
   close() {
     this.dialogElement.nativeElement.close();
+    this.clearSessionTimer();
   }
 
-  getRendimientoColor(rendimiento: string): string { 
+  private startSessionTimer() {
+    this.clearSessionTimer();
+    this.sessionTimer = setTimeout(() => {
+      this.close();
+    }, this.SESSION_TIMEOUT);
+  }
+
+  private clearSessionTimer() {
+    if (this.sessionTimer) {
+      clearTimeout(this.sessionTimer);
+    }
+  }
+
+  ngOnDestroy() {
+    this.clearSessionTimer();
+  }
+
+  getRendimientoColor(rendimiento: string): string {
     const colors = {
       'Deficiente': 'text-red-500',
       'Regular': 'text-orange-500',

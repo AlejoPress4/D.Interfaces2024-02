@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import {Estudiante, Inscripcion, InfoEstudiante, InfoInscripcion} from './inscripcion';
+import { Estudiante, Inscripcion, InfoEstudiante, InfoInscripcion } from './inscripcion';
 import { ModalComponent } from './modal/modal.component';
+import { ViewCounterService } from './services/view-counter.service';
 
 @Component({
   selector: 'app-root',
@@ -25,14 +26,13 @@ export class AppComponent {
   constructor() {
     console.log(this.data);
   }
-
   ngOnInit(): void {
     this.http.get<Inscripcion[]>('assets/inscripciones.json').subscribe((response: Inscripcion[]) => {
       this.data = response;
       console.log(this.getInfoEstudiantes());
-      // console.log(' ');
     });
   }
+
   getEstudiantes(): Estudiante[] {
     return [...new Map(this.data.map(inscripcion => [inscripcion.estudiante.nombre, inscripcion.estudiante])).values()].sort((a, b) => a.nombre.localeCompare(b.nombre));
   }
@@ -53,16 +53,15 @@ export class AppComponent {
     return { estudiante, info, promedio, rendimiento };
   }
 
-  getInfoEstudiantes(): InfoEstudiante[] {return this.getEstudiantes().map(estudiante => this.getInfoEstudiante(estudiante.codigo));
+  getInfoEstudiantes(): InfoEstudiante[] {
+    return this.getEstudiantes().map(estudiante => this.getInfoEstudiante(estudiante.codigo));
   }
-
 
   getPromedio(info: InfoInscripcion[]): number {
     let total = 0;
     info.forEach(inscripcion => total += inscripcion.definitiva);
     return total / info.length;
   }
-
 
   getRendimiento(promedio: number): string {
     if (promedio < 3) return 'Deficiente';
@@ -83,3 +82,4 @@ export class AppComponent {
     }
   }
 }
+
