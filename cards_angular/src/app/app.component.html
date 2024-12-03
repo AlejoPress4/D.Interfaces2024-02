@@ -1,0 +1,60 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-white mb-12">Información de Estudiantes</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        @for(inscripcion of getInfoEstudiantes(); track inscripcion.estudiante.codigo) {
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
+            <div class="p-6">
+              <a href="#" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 mb-4 block">
+                {{ inscripcion.estudiante.nombre }}
+              </a>
+              @for(info of inscripcion.info; track info.grupo) {
+                <div class="mb-6">
+                  <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    {{ info.grupo.asignatura.nombre }}
+                  </h3>
+                  <div class="flex flex-wrap items-center mb-2">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">Notas:</span>
+                    @for(nota of info.notas; track nota) {
+                      <span class="px-2 py-1 rounded-full text-xs font-medium mr-2 mb-2" 
+                            [ngClass]="nota < 3.0 ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'">
+                        {{ nota.toFixed(1) }}
+                      </span>
+                    }
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">Definitiva:</span>
+                    <span class="px-3 py-1 rounded-full text-sm font-bold" 
+                          [ngClass]="info.definitiva < 3.0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'">
+                      {{ info.definitiva.toFixed(1) }}
+                    </span>
+                  </div>
+                </div>
+              }
+              <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <p class="text-gray-600 dark:text-gray-400 mb-2">
+                  Promedio: 
+                  <span class="font-bold text-gray-800 dark:text-gray-200">
+                    {{ inscripcion.promedio?.toFixed(2) }}
+                  </span>
+                </p>
+                <p class="text-gray-600 dark:text-gray-400">
+                  Rendimiento: 
+                  <span class="dark:text-white font-bold px-2 py-1 rounded-full text-sm" 
+                        [ngClass]="{
+                          'bg-red-500 text-white': inscripcion.rendimiento === 'Deficiente',
+                          'bg-yellow-500 text-white': inscripcion.rendimiento === 'Regular',
+                          'bg-green-500 text-white': inscripcion.rendimiento === 'Aceptable',
+                          'bg-blue-500 text-white': inscripcion.rendimiento === 'Bueno',
+                          'bg-purple-500 text-white': inscripcion.rendimiento === 'Sobresaliente'
+                        }">
+                    {{ inscripcion.rendimiento }}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
